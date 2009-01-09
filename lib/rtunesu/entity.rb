@@ -218,7 +218,16 @@ module RTunesU
   class MissingParent < Exception
   end
   
-  # Child entties that cannot save
-  class CoverImage < Entity;end
-  class BannerImage < Entity;end
+  # oddball child entities that cannot save on their own
+  # Images
+  class EntityImage < Entity
+    itunes_attribute :shared
+  end
+  class CoverImage < EntityImage;end
+  class BannerImage < EntityImage;end
+  class ThumbnailImage < EntityImage;end
+  #LinkCollection. WTH Apple.
+  class LinkCollection < Entity
+    itunes_attribute :name, :feed_url
+  end
 end

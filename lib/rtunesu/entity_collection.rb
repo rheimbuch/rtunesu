@@ -24,3 +24,4 @@ class Groups < EntityCollection; end
 class Permissions < EntityCollection; end
 class Themes < EntityCollection; end
 class Tracks < EntityCollection; end
+class LinkCollectionSet < EntityCollection; end #Apple, WTH, really.

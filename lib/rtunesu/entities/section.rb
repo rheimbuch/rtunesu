@@ -11,5 +11,8 @@ module RTunesU
   # Course
   # Division
   class Section < Entity
+    itunes_attribute :name, :allow_subscription
+    itunes_attribute :aggregate_file_size, :readonly => true
+    itunes_child_entity_collection :divisions, :courses, :permissions
   end
 end
