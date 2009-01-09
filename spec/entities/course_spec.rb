@@ -1,6 +1,12 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 include RTunesU
 
+spec_attributes_of_new_object(Course, :name, :instructor, :description, :short_name)
+spec_attributes_of_new_object(Course, :aggregate_file_size, :readonly => true)
+spec_child_entity_attributes_of_new_object(Course, :cover_image, :banner_image, :thumbnail_image)
+spec_child_entity_collection_attributes_of_new_object(Course)
+
+
 describe Course, 'converting to xml' do
   before do
     @course = Course.new

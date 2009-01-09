@@ -4,33 +4,29 @@ module RTunesU
   # A Base class reprenseting the various entities seen in iTunes U.  Subclassed into the actual entity classes (Course, Division, Track, etc).  Entity is mostly an object oriented interface to the underlying XML data returned from iTunes U.  Most of attributes of an Entity are read by searching the souce XML returned from iTunes U by the Entity class's implemention of method_missing. 
   # Attribute of an Entity are written through method missing as well.  Methods that end in '=' will write data that will be saved to iTunes U.
   # == Reading and Writing Attributes
-  # c = Course.find(12345, rtunes_connection_object) # finds the Course in iTunes U and stores its XML data
-  # c.Handle # finds the <Handle> element in the XML data and returns its value (in this case 12345)
-  # c.Name   # finds the <Name> element in the XML data and returns its value (e.g. 'My Example Course')
-  # c.Name = 'Podcasting: a Revolution' # writes a hash of unsaved data that will be sent to iTunes U.
+  # RTunesU::Connection.establish_connection(:user_id =>19248, 
+  # :user_username =>'admin',
+  # :user_name => 'Admin',
+  # :user_email => 'admin@example.edu',
+  # :user_credentials => ['Administrator@urn:mace:example.edu'],
+  # :site => 'example.edu', 
+  # :shared_secret => 'STRINGOFTHIRTYTWOLETTERSORDIGITS')
+  # 
+  # c = Course.find(12345) # finds the Course in iTunes U and stores its XML data
+  # c.handle # finds the <Handle> element in the XML data and returns its value (in this case 12345)
+  # c.name   # finds the <Name> element in the XML data and returns its value (e.g. 'My Example Course'), or nil
+  # c.name = 'Podcasting: a Revolution' # writes a hash of unsaved data that will be sent to iTunes U.
   #
   # == Accessing related entities 
-  # Related Entity objects are accessed with the pluralized form of their class name.  To access a Course's related Group entities, you would use c.Groups. This will return an array of Group objects (or an empty Array object if there are no associated Groups)
+  # Related Entity objects are accessed with the pluralized form of their class name.  To access a Course's related Group entities, you would use c.groups. This will return an EntityCollection of Group objects (or an empty EntityCollection object if there are no associated Groups)
   # You can set the array of associated entities by using the '=' form of the accessor and add anothe element to the end of an array of related entities with '<<'
   # Examples:
-  # c = Course.find(12345, rtunes_connection_object) # finds the Course in iTunes U and stores its XML data
-  # c.Groups # returns an array of Group entities or an empty array of there are no Group entities
-  # c.Groups = [Group.new(:Name => 'Lectures')] # assigns the Groups related entity array to an existign array (overwriting any local data about Groups)
-  # c.Groups << Group.new(:Name => 'Videos') # Adds the new Group object to the end of hte Groups array
-  # c.Groups.collect {|g| g.Name} # ['Lectures', 'Videos']
+  # c = Course.find(12345) # finds the Course in iTunes U and stores its XML data
+  # c.groups # returns an array of Group entities or an empty array of there are no Group entities
+  # c.groups = Groups.new(Group.new(:Name => 'Lectures')) # assigns the Groups related entity array to an existing Groups object (overwriting any local data about Groups)
+  # c.groups << Group.new(:Name => 'Videos') # Adds the new Group object to the end of hte Groups array
+  # c.groups.collect {|g| g.Name} # ['Lectures', 'Videos']
   #
-  # == Notes on arbitrary XML
-  # Because Entity is, at heart, an object oriented wrapper for iTunes U XML data it is possible to add arbitrary (and possibly meaningless or invalidating) data that will be sent to iTunes U.  You should have a solid understanding of how Entites relate in iTunes U to avoind sending bad data.
-  # Examples:
-  # c = Course.find(12345, rtunes_connection_object)
-  # c.Junk = 'some junk xml' 
-  # c.save
-  # # c.save will generate XML that inclucdes 
-  # # <Course>
-  # #   <Junk>some junk xml</Junk>
-  # #   ... some other XML data ...
-  # # </Course>
-  # # this XML may raise errors in iTunes U because it doesn't match valid iTunes U documents
   class Entity
     attr_accessor :connection, :attributes, :handle, :parent, :parent_handle, :saved, :source_xml
     
@@ -93,6 +89,7 @@ module RTunesU
     def initialize(attrs = {})
       self.attributes = {}
       attrs.each {|attribute, value| self.send("#{attribute}=", value)}
+      return self
     end
         
     def self.establish_connection(options)
@@ -118,12 +115,14 @@ module RTunesU
       entity
     end
     
+    # creats a new instance from parsed xml
     def self.from_xml(xml)
       instance = self.new()
       instance.source_xml = xml
       return instance
     end
-        
+      
+    # loads parsed xml data into an existing instance  
     def load_from_xml(xml)
       self.source_xml = Hpricot.XML(xml).at("//ITunesUResponse//#{self.class_name}//Handle[text()=#{self.handle}]..")
       raise EntityNotFound if self.source_xml.nil?
@@ -212,9 +211,11 @@ module RTunesU
     end
   end
   
+  # Error class raised when Entity.find does not return an entity
   class EntityNotFound < Exception
   end
   
+  # Error class raised when Entity#save is called for an entity instance that does not have a parent_handle attribute
   class MissingParent < Exception
   end
   
@@ -229,5 +230,9 @@ module RTunesU
   #LinkCollection. WTH Apple.
   class LinkCollection < Entity
     itunes_attribute :name, :feed_url
+  end
+  
+  class ExternalFeed < Entity
+    itunes_attribute :url, :owner_email, :polling_interval
   end
 end
