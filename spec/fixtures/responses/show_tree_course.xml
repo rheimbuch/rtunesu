@@ -38,15 +38,10 @@
       <Course>
         <Name>SI 539 001 W07</Name>
         <Handle>1257981186</Handle>
-        <Instructor>Trek Glowacki</Instructor>
         <Description>This course covers the application of database technology to the service of Web sites. Students discuss the underlying technologies of Web site design, implementation, and evaluation. More importantly, students focus on the use of data gathering, storage, retrieval, processing, and formatting, in the context of a Web site. Course covers gathering data from users through online forms and Ruby on Rails programs; effectively storing that data in a database; Web-based administrative interfaces to the database; and the effective formatting and display of the data at the Web site. Web 2.0 technologies such as AJAX and XML are investigated. Practical applications are studied; this is a project-based course.</Description>
         <Identifier>147127e6-5e93-4a39-0037-0a09ee39edbb</Identifier>
         <ThemeHandle />
         <ShortName>SI 539 001 W07</ShortName>
-        <Permission>
-          <Credential>Authenticated@urn:mace:itunesu.com:sites:umich.edu</Credential>
-          <Access>No Access</Access>
-        </Permission>
         <Group>
           <Name>Lectures</Name>
           <Handle>1257981189</Handle>
@@ -533,6 +528,10 @@
         </Group>
         <AggregateFileSize>1261838667</AggregateFileSize>
         <AllowSubscription />
+        <CoverImage>
+          <Handle>1194148492</Handle>
+          <Shared>true</Shared>
+        </CoverImage>
       </Course>
       <Division />
       <AggregateFileSize>348154282147</AggregateFileSize>

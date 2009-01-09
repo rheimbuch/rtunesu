@@ -20,6 +20,10 @@ include RTunesU
 #   it "converts to an xml string"
 #   it "creats from a ITunesU Response"
 # end
+describe Entity, 'establish a connection' do
+  it 'can connect to iTunes U'
+end
+
 describe Entity, 'attribute assignment' do
   before do
     @entity = Entity.new

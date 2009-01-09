@@ -16,5 +16,6 @@ module RTunesU
   # ExternalFeed
   
   class Group < Entity
+    itunes_attribute :name
   end
 end

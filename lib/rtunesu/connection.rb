@@ -30,8 +30,16 @@ module RTunesU
     
     attr_accessor :user, :options
     
-    def initialize(options = {})
-      self.user, self.options = options[:user], options
+    def initialize(opts)
+      # :user_id =>0, 
+      # :user_username =>'admin',
+      # :user_name => 'Admin',
+      # :user_email => 'admin@example.com',
+      # :user_credentials => ['Administrator@urn:mace:example.edu'],
+      # :site => 'example.edu', 
+      # :shared_secret => 'STRINGOFTHIRTYTWOLETTERSORDIGITS'
+      self.user = User.new(opts[:user_id], opts[:user_username], opts[:user_name], opts[:user_email], opts[:user_credentials])
+      self.options = opts
     end
     
     # iTunes U requires all request to include an authorization token that includes a User's credentials, indetifiying information, and the time of the request.  This data is hashed against your institution's shared secret (provider by Apple with your iTunes U account information). Because tokens are valid only for 90 seconds they are generated for each request attempt.

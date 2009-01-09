@@ -34,18 +34,94 @@ module RTunesU
   class Entity
     attr_accessor :connection, :attributes, :handle, :parent, :parent_handle, :saved, :source_xml
     
+    def self.itunes_attribute(*args)
+      args.last.is_a?(Hash) ? options = args.pop : options = {}
+      args.each do |method|
+        define_method(method) do
+          begin
+            self.edits[method] || (self.source_xml % method.to_s.camelize).innerHTML
+          rescue NoMethodError
+            nil
+          end
+        end
+      
+        unless options[:readonly]
+          define_method("#{method.to_s}=") do |val|
+            self.edits[method] = val
+          end
+        end
+      end
+    end
+    
+    def self.itunes_child_entity(*args)
+      args.last.is_a?(Hash) ? options = args.pop : options = {}
+      
+      args.each do |method|
+        define_method(method) do
+          begin
+            self.accesses[method] ||= method.to_s.camelize.constantize.from_xml((self.source_xml % method.to_s.camelize).innerHTML)
+          rescue NoMethodError
+            nil
+          end
+        end
+      
+        define_method("#{method.to_s}=") do |obj|
+          self.accesses[method] = obj
+        end
+      end
+    end
+    
+    def self.itunes_child_entity_collection(*args)
+      args.last.is_a?(Hash) ? options = args.pop : options = {}
+      
+      args.each do |method|
+        define_method(method) do
+          begin
+            self.accesses[method] ||= method.to_s.camelize.constantize.from_xml(self.source_xml / "/#{method.to_s.singularize.camelize}")
+          rescue NoMethodError
+            self.accesses[method] = method.to_s.camelize.constantize.new
+          end
+        end
+      
+        define_method("#{method.to_s}=") do |obj|
+          self.accesses[method] = obj
+        end
+      end
+    end
+    
     # Creates a new Entity object with attributes based on the hash argument  Some of these attributes are assgined to instance variables of the obect (if there is an attr_accessor for it), the rest will be written to a hash of edits that will be saved to iTunes U using method_missing
     def initialize(attrs = {})
       self.attributes = {}
       attrs.each {|attribute, value| self.send("#{attribute}=", value)}
     end
         
+    def self.establish_connection(options)
+      # :user_id =>0, 
+      # :user_username =>'admin',
+      # :user_name => 'Admin',
+      # :user_email => 'admin@example.com',
+      # :user_credentials => ['Administrator@urn:mace:example.edu'],
+      # :site => 'example.edu', 
+      # :shared_secret => 'STRINGOFTHIRTYTWOLETTERSORDIGITS'
+      @connection = RTunesU::Connection.new(options)
+    end
+    
+    def self.connection
+      @connection
+    end
+    
     # Finds a specific entity in iTunes U. To find an entity you will need to know both its type (Course, Group, etc) and handle.  Handles uniquely identify entities in iTunes U and the entity type is used to search the returned XML for the specific entity you are looking for.  For example,
     # Course.find(123456, rtunes_connection_object)
-    def self.find(handle, connection)
+    def self.find(handle)
       entity = self.new(:handle => handle)
-      entity.load_from_xml(connection.process(Document::ShowTree.new(entity).xml))
+      entity.load_from_xml(Entity.connection.process(Document::ShowTree.new(entity).xml))
       entity
+    end
+    
+    def self.from_xml(xml)
+      instance = self.new()
+      instance.source_xml = xml
+      return instance
     end
         
     def load_from_xml(xml)
@@ -58,9 +134,16 @@ module RTunesU
       @edits ||= {}
     end
     
+     # Accesses stores the child entities accessed from the source xml
+    def accesses
+      @accesses ||= {}
+    end
+    
     # Clear the edits and restores the loaded object to its original form
     def reload
       self.edits.clear
+      self.accesses.clear
+      return self
     end
     
     # Returns the parent of the entity
@@ -69,33 +152,7 @@ module RTunesU
     rescue
       nil
     end
-    
-    def method_missing(method_name, args = nil)
-      # introspect the kind of method call (read one attribute, 
-      # read an array of related items, write one attribute, write an array of related items)
-      case method_name.to_s.match(/(s)*(=)*$/).captures
-       when [nil, "="] : self.edits[method_name.to_s[0..-2]] = args
-       when ["s", "="] : self.edits[method_name.to_s[0..-2]] = args
-       when [nil, nil] : value_from_edits_or_store(method_name.to_s)
-       when ["s", nil] : value_from_edits_or_store(method_name.to_s, true)
-      end
-    rescue NoMethodError
-      raise NoMethodError, "undefined method '#{method_name}' for #{self.class}"
-    end
-    
-    def value_from_edits_or_store(name, multi = false)
-      if multi
-        begin
-          self.edits[name] || (self.source_xml / name.to_s.chop).collect {|el| Object.module_eval(el.name).new(:source_xml => el)}
-        rescue NoMethodError
-          self.edits[name] = []
-        end
-      else
-        self.edits[name] ||  (self.source_xml % name).innerHTML
-      end
-    end
-
-            
+        
     # Returns the name of the object's class ignoring namespacing. 
     # === Use:
     # course = RTunesU::Course.new
@@ -112,37 +169,43 @@ module RTunesU
     
     def to_xml(xml_builder = Builder::XmlMarkup.new)
       xml_builder.tag!(self.class_name) {
-        self.edits.each {|attribute,edit| edit.is_a?(Array) ? edit.each {|item| item.to_xml(xml_builder)} : xml_builder.tag!(attribute, edit) }
-        # self.edits.each {|attribute| xml_builder.tag!(attribute.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }, self.attributes[attribute.to_s]) unless self.attributes[attribute.to_s].nil? || self.attributes[attribute.to_s].empty? }
+        self.edits.each {|attribute,edit| xml_builder.tag!(attribute.to_s.camelize, edit) }
+        self.accesses.each {|entity_name, entity| entity.to_xml(xml_builder) if entity.edited? }    
       }
     end
     
     # called when .save is called on an object that is already stored in iTunes U
-    def update(connection)
-      connection.process(Document::Merge.new(self).xml)
+    def update
+      Entity.connection.process(Document::Merge.new(self).xml)
       self
     end
     
     # called when .save is called on an object that has no Handle (i.e. does not already exist in iTunes U)
-    def create(connection)
-      response = Hpricot.XML(connection.process(Document::Add.new(self).xml))
+    def create
+      response = Hpricot.XML(Entity.connection.process(Document::Add.new(self).xml))
       raise Exception, response.at('error').innerHTML if response.at('error')
       self.handle = response.at('AddedObjectHandle').innerHTML
       self
     end
     
     # Saves the entity to iTunes U.  Save takes single argument (an iTunes U connection object).  If the entity is unsaved this will create the entity and populate its handle attribte.  If the entity has already been saved it will send the updated data (if any) to iTunes U.
-    def save(connection)
-      saved? ? update(connection) : create(connection)
+    def save
+      saved? ? update : create
     end
     
-    def saved?
+    # TODO: rename to new?
+    def saved? 
       self.handle ? true : false
     end
     
+    # TODO: rename to saved?
+    def edited?
+      !self.edits.empty? || !self.accesses.empty?
+    end
+    
     # Deletes the entity from iTunes U.  This cannot be undone.
-    def delete(connection)
-      response = Hpricot.XML(connection.process(Document::Delete.new(self).xml))
+    def delete
+      response = Hpricot.XML(Entity.connection.process(Document::Delete.new(self).xml))
       raise Exception, response.at('error').innerHTML if response.at('error')
       self.handle = nil
       self
@@ -154,4 +217,8 @@ module RTunesU
   
   class MissingParent < Exception
   end
+  
+  # Child entties that cannot save
+  class CoverImage < Entity;end
+  class BannerImage < Entity;end
 end
