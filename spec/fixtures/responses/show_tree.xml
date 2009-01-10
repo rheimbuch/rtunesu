@@ -32,81 +32,98 @@
     <Section>
       <Name>Cupertino University Courses</Name>
       <Handle>27362003</Handle>
-      <Course>
-        <Name>ENG 350: Love and Despair in Poetry</Name>
-        <Handle>27362036</Handle>
-        <Instructor>Instructor: Jason Edison</Instructor>
-        <Description>Explore the depths of human emotion through the power of verse.</Description>
-        <Permission>
-          <Credential>Unauthenticated@urn:mace:itunesu.com:sites:adc.education.apple.com</Credential>
-          <Access>No Access</Access>
-        </Permission>
-        <CoverImage>
-          <Handle>1312377200</Handle>
-          <Shared>true</Shared>
-        </CoverImage>
-        <BannerImage>
-          <Handle>28248104</Handle>
-          <Shared>true</Shared>
-        </BannerImage>
-        <ThumbnailImage>
-          <Handle>28248105</Handle>
-          <Shared>true</Shared>
-        </ThumbnailImage>
-        <Group>
-          <Name>Love</Name>
-          <Handle>1250607352</Handle>
-          <Permission>
-            <Credential>Student@urn:mace:itunesu.com:sites:
-            cupertino.edu</Credential>
-            <Access>Download</Access>
-          </Permission>
-          <Track>
-            <Name>Sonnet 55</Name>
-            <Handle>1250054257</Handle>
-            <Kind>song</Kind>
-            <TrackNumber>0</TrackNumber>
-            <DiscNumber>1</DiscNumber>
-            <DurationMilliseconds>75000</DurationMilliseconds>
-            <AlbumName>LiteralSystems.com Audio Books</AlbumName>
-            <ArtistName>William Shakespeare</ArtistName>
-            <DownloadURL>https://deimos.apple.com/WebObjects/Core.woa/DownloadTrack/adc.education.apple.com.27362036.01250607352.1250054257</DownloadURL>
-            <File>
-              <Handle>1184601703</Handle>
+      <% if @course_entity %>
+        <Course>
+          <% if @course_name %><Name>ENG 350: Love and Despair in Poetry</Name><% end %>
+          <% if @course_short_name %><ShortName>ENG 350</ShortName><% end %>
+          <Handle>27362036</Handle>
+          <% if @course_instructor %><Instructor>Instructor: Jason Edison</Instructor><% end %>
+          <% if @course_description %><Description>Explore the depths of human emotion through the power of verse.</Description><% end %>
+          <% if @course_coures_permissions %>
+            <Permission>
+              <Credential>Unauthenticated@urn:mace:itunesu.com:sites:adc.education.apple.com</Credential>
+              <Access>No Access</Access>
+            </Permission>
+          <% end %>
+          <% if @course_cover_image %>
+            <CoverImage>
+              <Handle>1312377200</Handle>
               <Shared>true</Shared>
-            </File>
-            <Comment>LiteralSystems.com (c) 2004. Licensed to the public under http://creativecommons.org/licenses/by-nd-nc/1.0/</Comment>
-            <CategoryCode>102108</CategoryCode>
-          </Track>
-          <AggregateFileSize>3865860</AggregateFileSize>
-        </Group>
-        <Group>
-          <Name>Despair</Name>
-          <Handle>1137655816</Handle>
-          <GroupType>Feed</GroupType>
-          <ExternalFeed>
-            <URL>http://www.itunesu.edu/feedpath.xml</URL>
-            <OwnerEmail>john.doe@email.com</OwnerEmail>
-            <PollingInterval>Daily</PollingInterval>
-          </ExternalFeed>
-        </Group>
-        <Group>
-          <Name>Drop Box</Name>
-          <Handle>1432712681</Handle>
-        </Group>
-        <Group>
-          <Name>Class Podcast</Name>
-          <Handle>1434954191</Handle>
-        </Group>
-        <AggregateFileSize>29094280</AggregateFileSize>
-        <LinkCollectionSet>
-          <LinkCollection>
-            <Name>Links</Name>
-            <Handle>16409</Handle>
-            <FeedURL>https://deimos.apple.com/WebObjects/Core.woa/LinkFeed/adc.education.apple.com.27362036.016408.016409</FeedURL>
-          </LinkCollection>
-        </LinkCollectionSet>
-      </Course>
+            </CoverImage>
+          <% end %>
+          <% if @course_coures_banner_image %>
+            <BannerImage>
+              <Handle>28248104</Handle>
+              <Shared>true</Shared>
+            </BannerImage>
+          <% end %>
+          <% if @course_coures_thumbnail_image %>
+            <ThumbnailImage>
+              <Handle>28248105</Handle>
+              <Shared>true</Shared>
+            </ThumbnailImage>
+          <% end %>
+          <% if @course_groups %>
+            <Group>
+              <Name>Love</Name>
+              <Handle>1250607352</Handle>
+              <Permission>
+                <Credential>Student@urn:mace:itunesu.com:sites:
+                cupertino.edu</Credential>
+                <Access>Download</Access>
+              </Permission>
+              <Track>
+                <Name>Sonnet 55</Name>
+                <Handle>1250054257</Handle>
+                <Kind>song</Kind>
+                <TrackNumber>0</TrackNumber>
+                <DiscNumber>1</DiscNumber>
+                <DurationMilliseconds>75000</DurationMilliseconds>
+                <AlbumName>LiteralSystems.com Audio Books</AlbumName>
+                <ArtistName>William Shakespeare</ArtistName>
+                <DownloadURL>https://deimos.apple.com/WebObjects/Core.woa/DownloadTrack/adc.education.apple.com.27362036.01250607352.1250054257</DownloadURL>
+                <File>
+                  <Handle>1184601703</Handle>
+                  <Shared>true</Shared>
+                </File>
+                <Comment>LiteralSystems.com (c) 2004. Licensed to the public under http://creativecommons.org/licenses/by-nd-nc/1.0/</Comment>
+                <CategoryCode>102108</CategoryCode>
+              </Track>
+              <AggregateFileSize>3865860</AggregateFileSize>
+            </Group>
+            <Group>
+              <Name>Despair</Name>
+              <Handle>1137655816</Handle>
+              <GroupType>Feed</GroupType>
+              <ExternalFeed>
+                <URL>http://www.itunesu.edu/feedpath.xml</URL>
+                <OwnerEmail>john.doe@email.com</OwnerEmail>
+                <PollingInterval>Daily</PollingInterval>
+              </ExternalFeed>
+            </Group>
+            <Group>
+              <Name>Drop Box</Name>
+              <Handle>1432712681</Handle>
+            </Group>
+            <Group>
+              <Name>Class Podcast</Name>
+              <Handle>1434954191</Handle>
+            </Group>
+          <% end %>
+          <% if @course_aggregate_file_size %>
+            <AggregateFileSize>29094280</AggregateFileSize>
+          <% end %>
+          <% if @course_link_collection_set %>
+            <LinkCollectionSet>
+              <LinkCollection>
+                <Name>Links</Name>
+                <Handle>16409</Handle>
+                <FeedURL>https://deimos.apple.com/WebObjects/Core.woa/LinkFeed/adc.education.apple.com.27362036.016408.016409</FeedURL>
+              </LinkCollection>
+            </LinkCollectionSet>
+          <% end %>
+        </Course>
+      <% end %>
       <Course>
         <Name>COMM 410: Digital Storytelling</Name>
         <Handle>27362058</Handle>
@@ -156,8 +173,7 @@
         <Handle>1194148486</Handle>
         <ShortName>Standard Course</ShortName>
         <Permission>
-          <Credential>Authenticated@urn:mace:itunesu.com:sites:
-          adc.education.apple.com</Credential>
+          <Credential>Authenticated@urn:mace:itunesu.com:sites:adc.education.apple.com</Credential>
           <Access>No Access</Access>
         </Permission>
         <CoverImage>
@@ -185,8 +201,7 @@
           <LinkCollection>
             <Name>Title</Name>
             <Handle>17955</Handle>
-            <FeedURL>https://deimos.apple.com/WebObjects/Core.woa/LinkFeed/
-            adc.education.apple.com.1194148486.017954.017955</FeedURL>
+            <FeedURL>https://deimos.apple.com/WebObjects/Core.woa/LinkFeed/adc.education.apple.com.1194148486.017954.017955</FeedURL>
           </LinkCollection>
         </LinkCollectionSet>
       </Course>
@@ -234,8 +249,7 @@
       <LinkCollection>
         <Name>Links</Name>
         <Handle>16407</Handle>
-        <FeedURL>https://deimos.apple.com/WebObjects/Core.woa/LinkFeed/
-        adc.education.apple.com.016406.016407</FeedURL>
+        <FeedURL>https://deimos.apple.com/WebObjects/Core.woa/LinkFeed/adc.education.apple.com.016406.016407</FeedURL>
       </LinkCollection>
     </LinkCollectionSet>
   </Site>
