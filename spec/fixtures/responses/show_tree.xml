@@ -39,7 +39,7 @@
           <Handle>27362036</Handle>
           <% if @course_instructor %><Instructor>Instructor: Jason Edison</Instructor><% end %>
           <% if @course_description %><Description>Explore the depths of human emotion through the power of verse.</Description><% end %>
-          <% if @course_coures_permissions %>
+          <% if @course_permissions %>
             <Permission>
               <Credential>Unauthenticated@urn:mace:itunesu.com:sites:adc.education.apple.com</Credential>
               <Access>No Access</Access>
@@ -51,13 +51,13 @@
               <Shared>true</Shared>
             </CoverImage>
           <% end %>
-          <% if @course_coures_banner_image %>
+          <% if @course_banner_image %>
             <BannerImage>
               <Handle>28248104</Handle>
               <Shared>true</Shared>
             </BannerImage>
           <% end %>
-          <% if @course_coures_thumbnail_image %>
+          <% if @course_thumbnail_image %>
             <ThumbnailImage>
               <Handle>28248105</Handle>
               <Shared>true</Shared>

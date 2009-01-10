@@ -60,7 +60,19 @@ def spec_child_entity_attributes_of_new_object(klass, *attrs)
 end
 
 def spec_child_entity_collection_attributes_of_new_object(klass, *attrs)
-  
+  attrs.each do |attribute|
+    describe klass, "#{attribute} subentity collection with new object" do
+      before(:all) do
+        @subentity_collection_class = attribute.to_s.capitalize.constantize
+        @instance_without_data = klass.new
+      end
+      
+      it "returns an empty entity collection object of the correct type for #{attribute}" do
+        @instance_without_data.send(attribute).should be_kind_of(@subentity_collection_class)
+        @instance_without_data.send(attribute).should be_empty
+      end
+    end
+  end
 end
 
 def spec_attributes_of_found_object(klass,id,*attrs)
@@ -117,6 +129,58 @@ def spec_attributes_of_found_object(klass,id,*attrs)
       end
     end
   end
+end
+
+def spec_child_entity_attributes_of_found_object(klass,id,*attrs)
+  attrs.each do |attribute|
+    describe klass, "##{attribute} subentity with object loaded from iTunes U" do
+      before(:all) do
+        @object = klass.new(:handle => id)
+        
+        class_as_string = klass.to_s.split("::").last.downcase
+        
+        instance_variable_set("@#{class_as_string}_entity",true)
+        instance_variable_set("@#{class_as_string}_#{attribute.to_s}", true)
+        
+        xml = ERB.new(File.read(File.dirname(__FILE__) + '/fixtures/responses/show_tree.xml')).result(binding)
+        
+        @object.load_from_xml(xml)
+      end
+      
+      it "can access its #{attribute} child entity from xml" do
+        @object.send(attribute).should be_kind_of(attribute.to_s.classify.constantize)
+      end
+      
+      it "can set its #{attribute} to a new object" do
+        new_subentity =  attribute.to_s.classify.constantize.new
+        @object.send(:"#{attribute}=",new_subentity)
+        @object.send(attribute).should equal(new_subentity)
+      end
+    end
+  
+    describe klass, "##{attribute} subentity missing wiht object loaded from iTunes U" do
+      before(:all) do
+        @object = klass.new(:handle => id)
+        
+        class_as_string = klass.to_s.split("::").last.downcase
+        
+        instance_variable_set("@#{class_as_string}_entity",true)
+        instance_variable_set("@#{class_as_string}_#{attribute.to_s}", false)
+        
+        xml = ERB.new(File.read(File.dirname(__FILE__) + '/fixtures/responses/show_tree.xml')).result(binding)
+        
+        @object.load_from_xml(xml)
+      end
+      
+      it "cannot read the value for #{attribute} subentity from xml if is not set" do
+         @object.send(attribute).should be_nil
+      end      
+    end
+  end
+end
+
+def spec_child_entity_attributes_of_found_object(klass,id,*attrs)
+  
 end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')

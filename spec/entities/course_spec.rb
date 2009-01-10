@@ -9,8 +9,8 @@ spec_child_entity_collection_attributes_of_new_object(Course, :groups, :permissi
 spec_attributes_of_found_object(Course, 27362036, :name, :instructor, :description, :short_name)
 spec_attributes_of_found_object(Course, 27362036, :aggregate_file_size, :readonly => true)
 
-# spec_child_entity_attributes_of_found_obect(Course, 27362036, :cover_image, :banner_image, :thumbnail_image)
-# spec_child_entity_attributes_of_found_obect(Course, 27362036, :groups, :permissions)
+spec_child_entity_attributes_of_found_object(Course, 27362036, :cover_image, :banner_image, :thumbnail_image)
+spec_child_entity_attributes_of_found_object(Course, 27362036, :groups, :permissions)
 
 # describe Course, 'converting to xml' do
 #   before do
@@ -42,51 +42,7 @@ spec_attributes_of_found_object(Course, 27362036, :aggregate_file_size, :readonl
 #   end
 # end
 # 
-# describe Course, 'loading from xml' do
-#   before do
-#     @data = File.open(File.dirname(__FILE__) + '/../fixtures/responses/show_tree_course.xml')
-#   end
-#   
-#   it 'can load XML data retrived from iTunes U' do
-#     @course = Course.new(:handle => 1257981186)
-#     lambda { @course.load_from_xml(@data) }.should_not raise_error
-#   end
-# end
 # 
-# describe Course, 'accessing attributes from xml or local data' do
-#   before do
-#    @course = Course.new(:handle => 1257981186)
-#    @course.load_from_xml(File.open(File.dirname(__FILE__) + '/../fixtures/responses/show_tree_course.xml'))
-#   end
-#   
-#   it 'can access attributes through its source xml' do
-#     @course.name.should eql('SI 539 001 W07')
-#   end
-#   
-#   it 'can access local data' do
-#     @course.instructor = 'James'
-#     @course.instructor.should eql('James')
-#   end
-#   
-#   it 'returns nil for data that is in neither xml source or local data' do
-#     @course.instructor.should be_nil
-#   end
-# end
-# 
-# describe Course, 'accessing child entities' do
-#   before do
-#     @course = Course.new(:handle => 1257981186)
-#     @course.load_from_xml(File.open(File.dirname(__FILE__) + '/../fixtures/responses/show_tree_course.xml'))
-#   end
-#   
-#   it 'can access its child entities from xml' do    
-#     @course.cover_image.should be_kind_of(CoverImage)
-#   end
-#   
-#   it 'returns nil for child entities that do not exist' do
-#     @course.banner_image.should be_nil
-#   end
-# end
 # 
 # describe Course, 'accessing child entity collections' do
 #   before do
@@ -139,35 +95,6 @@ spec_attributes_of_found_object(Course, 27362036, :aggregate_file_size, :readonl
 #   #     @will_be_saved_course = Course.new
 #   #   end
 #   #   
-#   #   describe 'Course#parent_handle' do
-#   #     it 'must exist'
-#   #     it 'is not optional'
-#   #     it 'cannot be updated'
-#   #   end
-#   #   
-#   #   describe 'Course#parent_path' do
-#   #     it 'must exist'
-#   #     it 'is not optional'
-#   #     it 'can be blank'
-#   #     it 'cannot be updated'
-#   #   end
-#   # 
-#   #   describe 'Course#handle' do
-#   #     it 'exists if saved'
-#   #     it 'is missing until save'
-#   #     it 'is readonly'
-#   #     it 'is not optional'
-#   #   end
-#   #   
-#   #   
-#   #   
-#   #   describe 'Course#groups' do
-#   #     it 'is a an array'
-#   #     it 'can be empty'
-#   #     it 'contains Group objects'
-#   #   end
-#   # end
-#   # 
 #   # describe 'saving' do
 #   #   before(:each) do
 #   #     @connection.should_receive(:process).at_least(:once).and_return(File.open(File.dirname(__FILE__) + '/../fixtures/responses/show_tree_course.xml'))
