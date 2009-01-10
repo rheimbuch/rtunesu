@@ -64,6 +64,8 @@ def spec_child_entity_collection_attributes_of_new_object(klass, *attrs)
 end
 
 def spec_attributes_of_found_object(klass,id,*attrs)
+  attrs.last.is_a?(Hash) ? opts = attrs.pop : opts = {}
+  
   attrs.each do |attribute|
     describe klass, "##{attribute} with object loaded from iTunes U" do
       before(:all) do
@@ -81,6 +83,17 @@ def spec_attributes_of_found_object(klass,id,*attrs)
       
       it "can read the value for #{attribute} from xml if is set" do
         @object.send(attribute).should_not be_nil
+      end
+      
+      unless opts[:readonly]
+        it "can set the value for #{attribute} to something new" do
+          lambda { @object.send(:"#{attribute}=", 'some new value') }.should_not raise_error
+        end
+      
+        it "reads the new set value for #{attribute}, ignoring the xml, when #{attribute} is set to something new" do
+          @object.send(:"#{attribute}=", 'some new value')
+          @object.send(attribute).should eql('some new value')
+        end
       end
     end
     

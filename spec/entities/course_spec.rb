@@ -6,7 +6,9 @@ spec_attributes_of_new_object(Course, :aggregate_file_size, :readonly => true)
 spec_child_entity_attributes_of_new_object(Course, :cover_image, :banner_image, :thumbnail_image)
 spec_child_entity_collection_attributes_of_new_object(Course, :groups, :permissions)
 
-spec_attributes_of_found_object(Course, 27362036, :name, :instructor, :description, :short_name,:aggregate_file_size)
+spec_attributes_of_found_object(Course, 27362036, :name, :instructor, :description, :short_name)
+spec_attributes_of_found_object(Course, 27362036, :aggregate_file_size, :readonly => true)
+
 # spec_child_entity_attributes_of_found_obect(Course, 27362036, :cover_image, :banner_image, :thumbnail_image)
 # spec_child_entity_attributes_of_found_obect(Course, 27362036, :groups, :permissions)
 
