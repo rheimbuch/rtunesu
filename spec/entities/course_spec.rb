@@ -10,7 +10,7 @@ spec_attributes_of_found_object(Course, 27362036, :name, :instructor, :descripti
 spec_attributes_of_found_object(Course, 27362036, :aggregate_file_size, :readonly => true)
 
 spec_child_entity_attributes_of_found_object(Course, 27362036, :cover_image, :banner_image, :thumbnail_image)
-spec_child_entity_attributes_of_found_object(Course, 27362036, :groups, :permissions)
+spec_child_entity_collection_attributes_of_found_object(Course, 27362036, :groups, :permissions)
 
 # describe Course, 'converting to xml' do
 #   before do
@@ -44,29 +44,6 @@ spec_child_entity_attributes_of_found_object(Course, 27362036, :groups, :permiss
 # 
 # 
 # 
-# describe Course, 'accessing child entity collections' do
-#   before do
-#     @course = Course.new(:handle => 1257981186)
-#     @course.load_from_xml(File.open(File.dirname(__FILE__) + '/../fixtures/responses/show_tree_course.xml'))
-#   end
-#   
-#   it 'can access its child entities collections from xml' do    
-#     @course.groups.should_not be_nil
-#   end
-#   
-#   it 'child entity collections accessed through xml return an array' do
-#     @course.groups.should be_kind_of(Array)
-#   end
-#   
-#   it 'child entity collections accessed through xml should contain objects typed to the child relationship' do
-#     @course.groups.first.should be_kind_of(Group)
-#   end
-#   
-#   it 'can access relationships with no xml data and return an empty array' do
-#     @course.permissions.should be_empty
-#   end
-#   
-# end
 # 
 # describe Course, "iTunes U interaction" do
 #   before do

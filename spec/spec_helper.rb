@@ -158,7 +158,7 @@ def spec_child_entity_attributes_of_found_object(klass,id,*attrs)
       end
     end
   
-    describe klass, "##{attribute} subentity missing wiht object loaded from iTunes U" do
+    describe klass, "##{attribute} subentity missing from object loaded from iTunes U" do
       before(:all) do
         @object = klass.new(:handle => id)
         
@@ -179,8 +179,56 @@ def spec_child_entity_attributes_of_found_object(klass,id,*attrs)
   end
 end
 
-def spec_child_entity_attributes_of_found_object(klass,id,*attrs)
-  
+def spec_child_entity_collection_attributes_of_found_object(klass,id,*attrs)
+  attrs.each do |attribute|
+    describe klass, "##{attribute} subentity collection with object loaded from iTunes U" do
+      before(:all) do
+        @object = klass.new(:handle => id)
+        @subentity_collection_class = attribute.to_s.capitalize.constantize
+        @subentity_collection_item_class = attribute.to_s.singularize.capitalize.constantize
+        
+        class_as_string = klass.to_s.split("::").last.downcase
+        
+        instance_variable_set("@#{class_as_string}_entity",true)
+        instance_variable_set("@#{class_as_string}_#{attribute.to_s}", true)
+        
+        xml = ERB.new(File.read(File.dirname(__FILE__) + '/fixtures/responses/show_tree.xml')).result(binding)
+        
+        @object.load_from_xml(xml)
+      end
+      
+      it "returns an entity collection object of the correct type for #{attribute}" do
+        @object.send(attribute).should be_kind_of(@subentity_collection_class)
+      end
+      
+      it "has an entity collection object filled with objects of correct type for #{attribute}" do
+         @object.send(attribute).should_not be_empty
+         @object.send(attribute).first.should be_kind_of(@subentity_collection_item_class)         
+      end
+      
+    end
+    
+    describe klass, "##{attribute} subentity collection missing from object loaded from iTunes U" do
+      before(:all) do
+        @object = klass.new(:handle => id)
+        @subentity_collection_class = attribute.to_s.capitalize.constantize
+        
+        class_as_string = klass.to_s.split("::").last.downcase
+        
+        instance_variable_set("@#{class_as_string}_entity",true)
+        instance_variable_set("@#{class_as_string}_#{attribute.to_s}", false)
+        
+        xml = ERB.new(File.read(File.dirname(__FILE__) + '/fixtures/responses/show_tree.xml')).result(binding)
+        
+        @object.load_from_xml(xml)
+      end
+      
+      it "returns an empty entity collection object of the correct type for #{attribute}" do
+        @object.send(attribute).should be_kind_of(@subentity_collection_class)
+        @object.send(attribute).should be_empty
+      end
+    end
+  end
 end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
