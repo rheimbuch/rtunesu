@@ -12,5 +12,6 @@ module RTunesU
   # Permission
   # Section
   class Division < Entity
+    
   end
 end

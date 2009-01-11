@@ -35,7 +35,7 @@ module RTunesU
       args.each do |method|
         define_method(method) do
           begin
-            self.edits[method] || (self.source_xml % method.to_s.camelize).innerHTML
+            self.edits[method] || (self.source_xml % "/#{method.to_s.camelize}").innerHTML
           rescue NoMethodError
             nil
           end

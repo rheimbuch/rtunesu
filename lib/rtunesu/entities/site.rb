@@ -14,7 +14,7 @@ module RTunesU
   # LinkCollectionSet
   # Section
   class Site < Entity
-    itunes_attribute :name, :instructor, :theme_handle, :login_url, :allow_subscription
+    itunes_attribute :name, :theme_handle, :login_url, :allow_subscription
     itunes_attribute :aggregate_file_size, :readonly => true
     itunes_child_entity :link_collection_set
     itunes_child_entity_collection :permissions, :sections
