@@ -20,6 +20,8 @@ class EntityCollection < Array
   end
 end
 
+class Divisions < EntityCollection; end
+class Courses < EntityCollection; end
 class Groups < EntityCollection; end
 class Permissions < EntityCollection; end
 class Sections < EntityCollection; end
