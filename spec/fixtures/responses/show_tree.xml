@@ -30,7 +30,7 @@
         <Access>No Access</Access>
       </Permission>
     <% end %>
-    <% if @site_sections || @course_entity %>
+    <% if @site_sections || @course_entity || @group_entity %>
       <Section>
         <Name>Cupertino University Courses</Name>
         <Handle>27362003</Handle>
@@ -144,24 +144,38 @@
             <Shared>true</Shared>
           </ThumbnailImage>
           <Group>
-            <Name>Video</Name>
+            <% if @group_name %><Name>Video</Name><% end %>
             <Handle>94505460</Handle>
-            <Track>
-              <Name>Air Jesse</Name>
-              <Handle>33064925</Handle>
-              <Kind>feature-movie</Kind>
-              <DiscNumber>1</DiscNumber>
-              <DurationMilliseconds>200000</DurationMilliseconds>
-              <AlbumName>Digital Storytelling</AlbumName>
-              <ArtistName>SFETT</ArtistName>
-              <DownloadURL>https://deimos.apple.com/WebObjects/Core.woa/DownloadTrack/adc.education.apple.com.27362058.094505460.33064925</DownloadURL>
-              <File>
-                <Handle>33064924</Handle>
-                <Shared>true</Shared>
-              </File>
-              <CategoryCode>101104</CategoryCode>
-            </Track>
-            <AggregateFileSize>61419318</AggregateFileSize>
+            <% if @group_group_type %><GroupType>Feed</GroupType><% end %>
+            <% if @group_allow_subscription %><AllowSubscription>true</AllowSubscription><% end %>
+            <% if @group_external_feed %>
+              <ExternalFeed>
+                <URL>http://www.itunesu.edu/feedpath.xml</URL>
+                <OwnerEmail>john.doe@email.com</OwnerEmail>
+                <PollingInterval>Daily</PollingInterval>
+              </ExternalFeed>
+            <% end %>
+            <% if @group_permissions %>
+              <Permission></Permission>
+            <% end %>
+            <% if @group_tracks %>
+              <Track>
+                <Name>Air Jesse</Name>
+                <Handle>33064925</Handle>
+                <Kind>feature-movie</Kind>
+                <DiscNumber>1</DiscNumber>
+                <DurationMilliseconds>200000</DurationMilliseconds>
+                <AlbumName>Digital Storytelling</AlbumName>
+                <ArtistName>SFETT</ArtistName>
+                <DownloadURL>https://deimos.apple.com/WebObjects/Core.woa/DownloadTrack/adc.education.apple.com.27362058.094505460.33064925</DownloadURL>
+                <File>
+                  <Handle>33064924</Handle>
+                  <Shared>true</Shared>
+                </File>
+                <CategoryCode>101104</CategoryCode>
+              </Track>
+            <% end %>
+            <% if @group_aggregate_file_size %><AggregateFileSize>61419318</AggregateFileSize><% end %>
           </Group>
           <AggregateFileSize>61449281</AggregateFileSize>
         </Course>
