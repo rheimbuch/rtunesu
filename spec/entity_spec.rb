@@ -24,35 +24,6 @@ describe Entity, 'establish a connection' do
   it 'can connect to iTunes U'
 end
 
-describe Entity, 'attribute assignment' do
-  before do
-    @entity = Entity.new
-  end
-  
-  it 'assigns singular attributes to the edits hash as a string' do
-    @entity.Name = 'Eng211'
-    @entity.edits['Name'].should eql('Eng211')
-    @entity.Name.should eql('Eng211')
-  end
-  
-  it 'returns a default empty array for plural attributes' do
-    @entity.Groups.should eql([])
-    @entity.edits['Groups'].should eql([])
-  end
-  
-  it 'assigns plural attribute to the edits hash an array' do
-    @entity.Groups = [Group.new(:name => 'does not matter')]
-    @entity.Groups.size.should be(1)
-    @entity.edits['Groups'].size.should be(1)
-  end
-  
-  it 'adds plural attributes with <<' do 
-    @entity.Groups = [Group.new(:name => 'does not matter')]
-    @entity.Groups.size.should be(1)
-    @entity.Groups << Group.new(:name => 'another group')
-    @entity.edits['Groups'].size.should be(2)
-  end
-end
 
 describe Entity, 'converting to XML' do
   describe 'with nested elements' do
