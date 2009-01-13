@@ -12,6 +12,7 @@ spec_attributes_of_found_object(Course, 27362036, :aggregate_file_size, :readonl
 spec_child_entity_attributes_of_found_object(Course, 27362036, :cover_image, :banner_image, :thumbnail_image)
 spec_child_entity_collection_attributes_of_found_object(Course, 27362036, :groups, :permissions)
 
+
 # describe Course, 'converting to xml' do
 #   before do
 #     @course = Course.new
