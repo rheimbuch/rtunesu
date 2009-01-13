@@ -60,7 +60,7 @@ module RTunesU
     end
         
     def upload_url_for_location(location)
-      url_string = "#{API_URL}/GetUploadURL/#{self.options[:site]}.#{location.Handle}?#{self.generate_authorization_token}"
+      url_string = "#{API_URL}/GetUploadURL/#{self.options[:site]}.#{location.handle}?#{self.generate_authorization_token}"
       puts url_string
       url = URI.parse(url_string)
       http = Net::HTTP.new(url.host, url.port)

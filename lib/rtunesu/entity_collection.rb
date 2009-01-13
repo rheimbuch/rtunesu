@@ -18,6 +18,10 @@ class EntityCollection < Array
   def edited?
     true
   end
+  
+  def find(id)
+    ""
+  end
 end
 
 class Divisions < EntityCollection; end

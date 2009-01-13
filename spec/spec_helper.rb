@@ -193,8 +193,7 @@ def spec_child_entity_collection_attributes_of_found_object(klass,id,*attrs)
         instance_variable_set("@#{class_as_string}_#{attribute.to_s}", true)
         
         xml = ERB.new(File.read(File.dirname(__FILE__) + '/fixtures/responses/show_tree.xml')).result(binding)
-        
-        @object.load_from_xml(xml)
+        puts xml
       end
       
       it "returns an entity collection object of the correct type for #{attribute}" do

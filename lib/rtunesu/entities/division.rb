@@ -3,15 +3,19 @@ module RTunesU
   # == Attributes
   # Handle
   # Name
+  # Description
   # ShortName
   # AggregateFileSize (read only)
   # Identifier
+  # LinkedFolderHandle
   # 
   #
   # == Nested Entities
   # Permission
   # Section
+  # ThemeHandle
   class Division < Entity
-    
+    itunes_attribute :name, :description
+    itunes_attribute :aggregate_file_size, :readonly => true
   end
 end

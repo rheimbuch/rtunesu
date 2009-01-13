@@ -3,8 +3,7 @@ include RTunesU
 
 describe User do
   before do
-    @user = User.new(41, 'pietrekg', 'Trek', 'pietrekg@umich.edu')
-    @user.credentials = ["Administrator@urn:mace:itunesu.com:sites:example.edu"]
+    @user = User.new(41, 'pietrekg', 'Trek', 'pietrekg@umich.edu', ["Administrator@urn:mace:itunesu.com:sites:example.edu"])
   end
   
   it 'should convert to a properly formatted identity string' do    
